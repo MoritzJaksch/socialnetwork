@@ -1,0 +1,23 @@
+
+
+.welcome-container {
+    border: 3px solid black;
+    background: violet;
+    padding: 25px;
+}
+
+.registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 3px solid pink;
+    background: green;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
