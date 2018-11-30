@@ -5,5 +5,6 @@ CREATE TABLE users(
     first VARCHAR(200) NOT NULL,
     last VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL UNIQUE,
-    pass VARCHAR(200) NOT NULL
+    pass VARCHAR(200) NOT NULL,
+    profilepic TEXT
 );

@@ -16,3 +16,31 @@ exports.createUsers = (first, last, email, pass) => {
         [first || null, last || null, email || null, pass || null]
     );
 };
+
+exports.getPass = email => {
+    return db.query(
+        `SELECT pass, id
+        FROM users
+        WHERE email = $1`,
+        [email]
+    );
+};
+
+exports.getUser = userId => {
+    return db.query(
+        `SELECT *
+        FROM users
+        WHERE id = $1`,
+        [userId]
+    );
+};
+
+exports.uploadProfilePic = (userId, profilepic) => {
+    return db.query(
+        `UPDATE users
+        SET profilepic = $2
+        WHERE id = $1
+        RETURNING *`,
+        [userId, profilepic]
+    );
+};

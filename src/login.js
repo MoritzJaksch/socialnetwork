@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "./axios";
-import { Link } from "react-router-dom";
-export default class Registration extends React.Component {
+
+export default class Login extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -11,7 +11,7 @@ export default class Registration extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(e) {
-        console.log("working");
+        console.log("login handlechange working");
         this.setState(
             {
                 [e.target.name]: e.target.value
@@ -19,11 +19,12 @@ export default class Registration extends React.Component {
             () => console.log("this state in handle change: ", this.state)
         );
     }
+
     handleSubmit(e) {
         e.preventDefault();
         console.log("default prevented", this.state);
         axios
-            .post("/registration", this.state)
+            .post("/login", this.state)
             .then(res => {
                 console.log("res in post", res);
                 if (res.data.success == false) {
@@ -40,24 +41,12 @@ export default class Registration extends React.Component {
                 console.log("error in post", err);
             });
     }
+
     render() {
         return (
-            <div className="registration-container">
-                <Link to="/login">click here to log in</Link>
-                <h1>Register for this site please</h1>
+            <div>
+                <h1>hash routing!!!!!!!!!11</h1>
                 <form onSubmit={this.handleSubmit}>
-                    <input
-                        onChange={this.handleChange}
-                        name="first"
-                        type="text"
-                        placeholder="first name"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="last"
-                        type="text"
-                        placeholder="last name"
-                    />
                     <input
                         onChange={this.handleChange}
                         name="email"
@@ -72,7 +61,6 @@ export default class Registration extends React.Component {
                     />
                     <button>register</button>
                 </form>
-                <p>{this.state.error}</p>
             </div>
         );
     }

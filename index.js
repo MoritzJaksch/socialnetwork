@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
 const compression = require("compression");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const ca = require("chalk-animation");
 const cookieSession = require("cookie-session");
-// const csurf = require("csurf");
+const csurf = require("csurf");
 const { hash, compare } = require("./bcrypt");
 
 ///////////////////WHAT DID THIS DO AGAIN?!/////////////////////
@@ -13,6 +13,29 @@ app.use((req, res, next) => {
     next();
 });
 ///////////////////WHAT DID THIS DO AGAIN?!/////////////////////
+var multer = require("multer");
+var uidSafe = require("uid-safe");
+var path = require("path");
+const s3 = require("./s3");
+const config = require("./config");
+
+var diskStorage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+var uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152
+    }
+});
 
 app.use(require("cookie-parser")());
 app.use(
@@ -23,24 +46,20 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
-// app.use(csurf());
+const { createUsers, getPass, getUser, uploadProfilePic } = require("./db");
 
-// app.use(function(req, res, next) {
-//     res.locals.csrfToken = req.csrfToken();
-//     next();
-// });
-
-const {
-    createUsers,
-} = require("./db");
-
-
-app.use(express.static('./public'));
+app.use(express.static("./public"));
 app.use(compression());
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.cookie("mytoken", req.csrfToken());
+    next();
+});
 if (process.env.NODE_ENV != "production") {
     app.use(
         "/bundle.js",
@@ -52,46 +71,106 @@ if (process.env.NODE_ENV != "production") {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
-app.post("/registration", (req,res)=>{
-    if (req.body.password) {
-        hash(req.body.password)
-            .then(pass => {
-                return createUsers(
-                    req.body.first,
-                    req.body.last,
-                    req.body.email,
-                    pass
-                ).then(result => {
-                    req.session.userId = result.rows[0].id;
-                    req.session.first = req.body.first;
-                    req.session.last = req.body.last;
-                    req.session.loggedIn = 1;
-                    console.log("req.session: ", req.session);
-                    console.log("result: ", result);
-                    res.json(result);
-                    // res.redirect("/profile");
-                }) .catch(err => {
-                    res.json({success: false});
-                    console.log("error in registration: ", err);
-                });
-
-            });
-
+app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
+    // If nothing went wrong the file is already in the uploads directory
+    if (req.file) {
+        uploadProfilePic(
+            req.session.userId,
+            config.s3Url + req.file.filename
+            // uploadData(
+            //     config.s3Url + req.file.filename,
+            //     req.body.title,
+            //     req.body.description,
+            //     req.body.username
+        ).then(data => {
+            console.log(req.file.filename);
+            res.json(data);
+        });
     } else {
-        res.json({success: false});
+        res.json({
+            success: false
+        });
     }
 });
 
+app.post("/upload", (req, res) => {
+    console.log(req);
+    uploadProfilePic(req.session.userId, req.file.filename).then(pic => {
+        res.json(pic);
+    });
+});
 
+app.get("/user", (req, res) => {
+    console.log("get request in user");
+    getUser(req.session.userId).then(results => {
+        res.json(results);
+    });
+});
+app.get("/welcome", function(req, res) {
+    if (req.session.userId) {
+        res.redirect("/");
+    } else {
+        res.sendFile(__dirname + "/index.html");
+    }
+});
 
+app.post("/registration", (req, res) => {
+    // if (req.body.password) {
+    hash(req.body.password).then(pass => {
+        return createUsers(req.body.first, req.body.last, req.body.email, pass)
+            .then(result => {
+                req.session.userId = result.rows[0].id;
+                req.session.first = req.body.first;
+                req.session.last = req.body.last;
+                req.session.loggedIn = 1;
+                console.log("req.session: ", req.session);
+                console.log("result: ", result);
+                res.json(result);
+                // res.redirect("/profile");
+            })
+            .catch(err => {
+                res.json({ success: false });
+                console.log("error in registration: ", err);
+            });
+    });
 
+    // } else {
+    //     res.json({success: false});
+    // }
+});
+
+app.post("/login", (req, res) => {
+    getPass(req.body.email).then(result => {
+        compare(req.body.password, result.rows[0].pass)
+            .then(doesMatch => {
+                if (doesMatch === true) {
+                    console.log(result.rows[0]);
+                    req.session.userId = result.rows[0].id;
+                    req.session.loggedIn = 1;
+                    console.log(result.rows[0]);
+                } else {
+                    res.json({ success: false });
+                }
+            })
+            .then(() => {
+                res.json(req.session);
+            })
+            .catch(err => {
+                console.log("error in login: ", err);
+                res.json({ success: false });
+            });
+    });
+});
 
 // app.get("/user", (req, res) => {});
 
 app.get("*", function(req, res) {
-    res.sendFile(__dirname + "/index.html");
+    if (!req.session.userId) {
+        res.redirect("/welcome");
+    } else {
+        res.sendFile(__dirname + "/index.html");
+    }
 });
-
 app.listen(8080, function() {
     ca.rainbow("I'm listening.");
 });
