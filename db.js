@@ -54,3 +54,39 @@ exports.updateBio = (userId, bio) => {
         [userId, bio]
     );
 };
+
+exports.checkFriendship = (senderId, receiverId) => {
+    return db.query(
+        `SELECT * FROM friends
+        WHERE (receiver_id = $1 AND sender_id = $2)
+        OR (receiver_id = $2 AND sender_id = $1)`,
+        [senderId, receiverId]
+    );
+};
+
+exports.sendFriendrequest = (senderId, receiverId) => {
+    return db.query(
+        `INSERT INTO friends (sender_id, receiver_id)
+        VALUES ($1, $2) RETURNING *`,
+        [senderId, receiverId]
+    );
+};
+
+exports.cancelFriendrequest = (senderId, receiverId) => {
+    return db.query(
+        `DELETE FROM friends
+    WHERE (receiver_id = $1 AND sender_id = $2)
+    OR (receiver_id = $2 AND sender_id = $1)`,
+        [senderId, receiverId]
+    );
+};
+
+exports.acceptFriendrequest = (senderId, receiverId) => {
+    return db.query(
+        `UPDATE friends
+        SET accepted = true
+        WHERE (receiver_id = $1 AND sender_id = $2)
+        OR (receiver_id = $2 AND sender_id = $1)`,
+        [senderId, receiverId]
+    );
+};

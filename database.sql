@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
@@ -8,4 +9,12 @@ CREATE TABLE users(
     pass VARCHAR(200) NOT NULL,
     bio VARCHAR(100) DEFAULT 'this is your bio...',
     profilepic TEXT
+);
+
+CREATE TABLE friends(
+    id SERIAL PRIMARY KEY,
+    receiver_id INTEGER NOT NULL REFERENCES users(id),
+    sender_id INTEGER NOT NULL REFERENCES users(id),
+    accepted BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

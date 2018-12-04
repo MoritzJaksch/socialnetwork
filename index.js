@@ -51,7 +51,11 @@ const {
     getPass,
     getUser,
     uploadProfilePic,
-    updateBio
+    updateBio,
+    checkFriendship,
+    sendFriendrequest,
+    cancelFriendrequest,
+    acceptFriendrequest
 } = require("./db");
 
 app.use(express.static("./public"));
@@ -112,10 +116,46 @@ app.get("/user", (req, res) => {
     });
 });
 
-app.get("/user/info", (req, res) => {
-    getUser(req.params.id).then(results => {
-        console.log("results in get user/info: ", results.rows);
-        res.json(results);
+app.get("/user/:id/info", (req, res) => {
+    if (req.params.id == req.session.userId) {
+        res.json({ error: "same ID" });
+    } else {
+        getUser(req.params.id)
+            .then(results => {
+                console.log("results in get user/info: ", results.data);
+                res.json(results);
+            })
+            .catch(err => {
+                res.json({ error: err });
+            });
+    }
+});
+
+app.get("/friendship/:id", (req, res) => {
+    checkFriendship(req.session.userId, req.params.id).then(results => {
+        console.log("result in checkFriendship:", results.rows[0]);
+        res.json(results.rows[0]);
+    });
+});
+
+app.post("/friendship/:id/send", (req, res) => {
+    sendFriendrequest(req.session.userId, req.params.id).then(results => {
+        console.log("result in Send Friendship:", results.rows[0]);
+        res.json(results.rows[0]);
+    });
+});
+
+app.post("/friendship/:id/cancel", (req, res) => {
+    cancelFriendrequest(req.session.userId, req.params.id).then(results => {
+        console.log("result in cancel Friendship: ", results.rows[0]);
+        res.json(results.rows[0]);
+    });
+});
+
+app.post("/friendship/:id/accept", (req, res) => {
+    acceptFriendrequest(req.session.userId, req.params.id).then(results => {
+        console.log("result in accept Friendship: ", results.rows[0]);
+        res.json(results.rows[0]);
     });
 });
 
