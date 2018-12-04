@@ -19,3 +19,26 @@ form {
     align-items: center;
     flex-direction: column;
 }
+
+.logo-container img {
+    height: 75px;
+}
+
+#profile img {
+    height: 200px;
+}
+
+#header .profile-pic {
+    height: 75px;
+}
+
+#profile .profile-pic-container {
+    left: 120px;
+}
+
+#header .profile-pic-container {
+    position: absolute;
+    background-color: grey;
+    top: 0;
+    right: 0;
+}

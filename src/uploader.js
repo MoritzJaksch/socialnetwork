@@ -3,7 +3,7 @@ import axios from "./axios";
 
 export default class Uploader extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,7 +31,7 @@ export default class Uploader extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="uploader">
                 <h1>uploader is here, bitches</h1>
                 <form onSubmit={this.handleSubmit}>
                     <input

@@ -46,7 +46,13 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
-const { createUsers, getPass, getUser, uploadProfilePic } = require("./db");
+const {
+    createUsers,
+    getPass,
+    getUser,
+    uploadProfilePic,
+    updateBio
+} = require("./db");
 
 app.use(express.static("./public"));
 app.use(compression());
@@ -101,17 +107,35 @@ app.post("/upload", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-    console.log("get request in user");
     getUser(req.session.userId).then(results => {
         res.json(results);
     });
 });
+
+app.get("/user/info", (req, res) => {
+    getUser(req.params.id).then(results => {
+        console.log("results in get user/info: ", results.rows);
+        res.json(results);
+    });
+});
+
 app.get("/welcome", function(req, res) {
     if (req.session.userId) {
         res.redirect("/");
     } else {
         res.sendFile(__dirname + "/index.html");
     }
+});
+
+app.post("/bio", (req, res) => {
+    console.log("req in BIO: ", req);
+    updateBio(req.session.userId, req.body.bio)
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => {
+            console.log("error in bio: ", err);
+        });
 });
 
 app.post("/registration", (req, res) => {
