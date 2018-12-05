@@ -6,6 +6,7 @@ export default class Friendbutton extends React.Component {
         super(props);
         this.state = {};
         this.makeFriendRequest = this.makeFriendRequest.bind(this);
+        this.cancelFriendrequest = this.cancelFriendrequest.bind(this);
     }
     componentDidMount() {
         axios.get("/friendship/" + this.props.otherUserId).then(results => {
@@ -75,11 +76,27 @@ export default class Friendbutton extends React.Component {
                 });
         }
     }
+    cancelFriendrequest() {
+        axios
+            .post("/friendship/" + this.props.otherUserId + "/cancel")
+            .then(results => {
+                console.log("results in friendship cancel: ", results);
+                this.setState({
+                    buttontext: "send friendrequest",
+                    status: 0
+                });
+            });
+    }
     render() {
         return (
-            <button onClick={this.makeFriendRequest}>
-                {this.state.buttontext}
-            </button>
+            <div>
+                <button onClick={this.makeFriendRequest}>
+                    {this.state.buttontext}
+                </button>
+                {this.state.status == 2 && (
+                    <button onClick={this.cancelFriendrequest}>decline</button>
+                )}
+            </div>
         );
     }
 }

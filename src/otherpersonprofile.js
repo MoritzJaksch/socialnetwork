@@ -34,7 +34,7 @@ export default class OtherPersonProfile extends React.Component {
     render() {
         return (
             <div className="opp-container">
-                <h1>OPP running.</h1>
+                <h1>{this.state.first}'s Profile!</h1>
                 <ProfilePic url={this.state.profilepic} />
                 <Friendbutton otherUserId={this.props.match.params.id} />
             </div>

@@ -1,3 +1,6 @@
+* {
+    font-family: sans-serif;
+}
 .welcome-container {
     border: 3px solid black;
     background: violet;
@@ -41,4 +44,7 @@ form {
     background-color: grey;
     top: 0;
     right: 0;
+}
+.opp-container .profile-pic-container img {
+    height: 100px;
 }

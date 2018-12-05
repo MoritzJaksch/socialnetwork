@@ -8,7 +8,9 @@ export default function Profile(props) {
     return (
         <div id="profile">
             <ProfilePic showUploader={props.showUploader} url={props.url} />
-            {props.first} {props.last}
+            <p>
+                {props.first} {props.last}
+            </p>
             <Bio bio={props.bio} setBio={props.setBio} />
         </div>
     );

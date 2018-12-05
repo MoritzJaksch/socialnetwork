@@ -59,6 +59,7 @@ export default class App extends React.Component {
                 <BrowserRouter>
                     <div>
                         <Route
+                            exact
                             path="/"
                             render={() => {
                                 return (
