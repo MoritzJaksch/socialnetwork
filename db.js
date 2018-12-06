@@ -76,7 +76,7 @@ exports.cancelFriendrequest = (senderId, receiverId) => {
     return db.query(
         `DELETE FROM friends
     WHERE (receiver_id = $1 AND sender_id = $2)
-    OR (receiver_id = $2 AND sender_id = $1)`,
+    OR (receiver_id = $2 AND sender_id = $1) RETURNING *`,
         [senderId, receiverId]
     );
 };
@@ -86,7 +86,20 @@ exports.acceptFriendrequest = (senderId, receiverId) => {
         `UPDATE friends
         SET accepted = true
         WHERE (receiver_id = $1 AND sender_id = $2)
-        OR (receiver_id = $2 AND sender_id = $1)`,
+        OR (receiver_id = $2 AND sender_id = $1) RETURNING *`,
         [senderId, receiverId]
+    );
+};
+
+exports.getFriendsAndWannabes = (myId) => {
+    return db.query(
+        `
+    SELECT users.id, first, last, profilepic, accepted
+    FROM friends
+    JOIN users
+    ON (accepted = false AND receiver_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND receiver_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND sender_id = $1 AND receiver_id = users.id)
+`, [myId]
     );
 };

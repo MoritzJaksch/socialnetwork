@@ -7,6 +7,8 @@ import ProfilePic from "./profilepic";
 import Uploader from "./uploader";
 import Profile from "./profile";
 import OtherPersonProfile from "./otherpersonprofile";
+import Friends from "./friends";
+
 
 export default class App extends React.Component {
     constructor() {
@@ -79,6 +81,11 @@ export default class App extends React.Component {
                         <Route
                             path="/user/:id"
                             component={OtherPersonProfile}
+                        />
+
+                        <Route
+                            exact path = "/friends"
+                            component={Friends}
                         />
                     </div>
                 </BrowserRouter>

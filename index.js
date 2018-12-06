@@ -55,7 +55,8 @@ const {
     checkFriendship,
     sendFriendrequest,
     cancelFriendrequest,
-    acceptFriendrequest
+    acceptFriendrequest,
+    getFriendsAndWannabes
 } = require("./db");
 
 app.use(express.static("./public"));
@@ -176,6 +177,16 @@ app.post("/bio", (req, res) => {
         .catch(err => {
             console.log("error in bio: ", err);
         });
+});
+
+app.get("/friends/friendlist", (req,res)=>{
+    getFriendsAndWannabes(req.session.userId).then(result=>{
+        console.log("results in friendlist: ", result);
+        res.json(result.rows);
+    }).catch(err => {
+        console.log("error in friendlist: ", err);
+    });
+
 });
 
 app.post("/registration", (req, res) => {
