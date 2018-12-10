@@ -53,3 +53,23 @@ export function acceptFriendRequest(otherPersonId){
     });
 
 }
+export function onlineUsers(list){
+    return {
+        type: "GET_ONLINE_USERS",
+        onlineUsers: list
+    };
+}
+
+export function userJoined(user){
+    return{
+        type: "USER_JOINED",
+        joinedUser: user
+    };
+}
+
+export function userLeft(userId){
+    return{
+        type: "USER_LEFT",
+        id: userId
+    };
+}

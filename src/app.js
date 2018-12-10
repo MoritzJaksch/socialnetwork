@@ -8,6 +8,7 @@ import Uploader from "./uploader";
 import Profile from "./profile";
 import OtherPersonProfile from "./otherpersonprofile";
 import Friends from "./friends";
+import OnlineUsers from "./onlineUsers";
 
 
 export default class App extends React.Component {
@@ -84,8 +85,11 @@ export default class App extends React.Component {
                         />
 
                         <Route
-                            exact path = "/friends"
+                            path = "/friends"
                             component={Friends}
+                        />
+                        <Route path = "/online"
+                            component={OnlineUsers}
                         />
                     </div>
                 </BrowserRouter>

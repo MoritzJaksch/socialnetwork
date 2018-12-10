@@ -103,3 +103,8 @@ exports.getFriendsAndWannabes = (myId) => {
 `, [myId]
     );
 };
+
+exports.getUsersByIds = (arrayOfIds) => {
+    const query = `SELECT id, first, last, profilepic FROM users WHERE id = ANY($1)`;
+    return db.query(query, [arrayOfIds]);
+};

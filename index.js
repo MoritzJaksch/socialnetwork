@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+
+const server = require('http').Server(app);
+const io = require('socket.io')(server, { origins: 'localhost:8080' });
+
 const compression = require("compression");
 const bodyParser = require("body-parser");
 const ca = require("chalk-animation");
@@ -7,6 +11,15 @@ const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 const { hash, compare } = require("./bcrypt");
 
+app.use(require("cookie-parser")());
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90
+});
+app.use(cookieSessionMiddleware);
+io.use(function(socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 ///////////////////WHAT DID THIS DO AGAIN?!/////////////////////
 app.use((req, res, next) => {
     res.setHeader("X-Frame-Options", "DENY");
@@ -37,15 +50,6 @@ var uploader = multer({
     }
 });
 
-app.use(require("cookie-parser")());
-app.use(
-    cookieSession({
-        secret:
-            process.env.SESSION_SECRET ||
-            require("./secrets.json").sessionSecret,
-        maxAge: 1000 * 60 * 60 * 24 * 14
-    })
-);
 const {
     createUsers,
     getPass,
@@ -56,7 +60,8 @@ const {
     sendFriendrequest,
     cancelFriendrequest,
     acceptFriendrequest,
-    getFriendsAndWannabes
+    getFriendsAndWannabes,
+    getUsersByIds
 } = require("./db");
 
 app.use(express.static("./public"));
@@ -246,6 +251,97 @@ app.get("*", function(req, res) {
         res.sendFile(__dirname + "/index.html");
     }
 });
-app.listen(8080, function() {
+server.listen(8080, function() {
     ca.rainbow("I'm listening.");
 });
+
+//////////////////SERVER-SIDE SOCKET CODE GOES HERE///////////////////
+let onlineUsers = {};
+
+io.on('connection', socket=>{
+    console.log(`User with socket id ${socket.id} just connected`);
+    console.log("socket Session info!", socket.request.session.userId);
+    let socketId = socket.id;
+    let userId = socket.request.session.userId;
+
+    onlineUsers[socketId] = userId;
+
+    let arrOfIds = Object.values(onlineUsers);
+    getUsersByIds(arrOfIds).then(result=>{
+        socket.emit("onlineUsers", result.rows);
+        console.log("arr of ids: ", arrOfIds);
+    }).then(()=>{getUser(userId).then(results=>{
+        if (arrOfIds.filter(
+            id => id == userId
+        ).length == 1) {
+            console.log("USER JOINED BROADCASTED!");
+            socket.broadcast.emit("userJoined", results.rows[0]);
+        }
+
+    });
+    });
+
+    socket.on('disconnect', ()=>{
+        console.log(`socket with the id ${socket.id} is now disconnected`);
+        delete onlineUsers[socketId];
+        arrOfIds = Object.values(onlineUsers);
+        if (arrOfIds.filter(
+            id => id == userId
+        ).length == 0) {
+            io.sockets.emit("userLeft", userId);
+        }
+        console.log("arr of Ids after splice: ",arrOfIds);
+
+    });
+});
+
+
+// socket.on('disconnect', ()=>{
+//     console.log(`socket with the id ${socket.id} is now disconnected`);
+//     let i = arrOfIds.indexOf(userId);
+//     let splicedArr = arrOfIds.splice(i, 1);
+//     console.log("arr of Ids after splice: ",splicedArr);
+//
+//
+//     if (splicedArr.filter(
+//         id => id == userId
+//     ).length == 1) {
+//         io.sockets.emit("userLeft", userId);
+//     }
+// });
+// });
+
+
+// getUser(userId).then(result=>{
+//     socket.broadcast.emit("userJoined", result.rows);
+// }).catch(err=>{
+//     console.log("err in userJoined: ", err);
+// });
+
+
+// getUser(userId).then(result=>{
+//     arrOfIds.push(result.rows[0].id);
+//     getUsersByIds(arrOfIds).then(result=>{
+//         socket.broadcast.emit("onlineUsers", result.rows);
+//     }).catch(err=>{
+//         console.log("err in usersbyid", err);
+//     });
+//
+// });
+
+
+// io.on('connection', function(socket) {
+//     console.log(`socket with the id ${socket.id} is now connected`);
+//
+//     socket.on('disconnect', function() {
+//         console.log(`socket with the id ${socket.id} is now disconnected`);
+//     });
+//
+//     socket.on('thanks', function(data) {
+//         console.log(data);
+//     });
+//
+//     socket.emit('welcome', {
+//         message: 'Welome. It is nice to see you'
+//     });
+// });

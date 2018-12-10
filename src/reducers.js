@@ -36,6 +36,32 @@ export default function(state = {}, action) {
             )
         };
     }
+    if(action.type == "GET_ONLINE_USERS"){
+        return{
+            ...state,
+            onlineUsers: action.onlineUsers
+        };
+    }
+    if(action.type == "USER_JOINED"){
+        return{
+            ...state,
+            onlineUsers: [...state.onlineUsers, action.joinedUser]
+        };
+    }
+    if(action.type == "USER_LEFT"){
+        return{
+            ...state,
+            onlineUsers: state.onlineUsers.filter(
+                onlineUser => {
+                    if(onlineUser.id != action.id){
+                        return onlineUser;
+                    }
+
+                }
+
+            )
+        };
+    }
     console.log(state);
     return state;
 
