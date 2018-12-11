@@ -61,7 +61,10 @@ const {
     cancelFriendrequest,
     acceptFriendrequest,
     getFriendsAndWannabes,
-    getUsersByIds
+    getUsersByIds,
+    storeMessage,
+    getMessages,
+    getNewMessage
 } = require("./db");
 
 app.use(express.static("./public"));
@@ -281,6 +284,17 @@ io.on('connection', socket=>{
     });
     });
 
+    getMessages().then(result => {
+        console.log("results in get Messages", result.rows);
+        // let chatObj = {
+        //     message: result.rows,
+        //     first: result[1].rows[0].first,
+        //     last: result[1].rows[0].last,
+        //     profilepic: result[1].rows[0].profilepic
+        // };
+        io.sockets.emit("gotAllMessages", result.rows);
+    });
+
     socket.on('disconnect', ()=>{
         console.log(`socket with the id ${socket.id} is now disconnected`);
         delete onlineUsers[socketId];
@@ -291,6 +305,19 @@ io.on('connection', socket=>{
             io.sockets.emit("userLeft", userId);
         }
         console.log("arr of Ids after splice: ",arrOfIds);
+
+    });
+
+    socket.on('chatMessage', (msg)=>{
+        console.log("msg from socket", msg);
+        storeMessage(msg, userId).then(()=>{
+            getNewMessage().then(result => {
+                console.log("result in messageSent: ", result.rows);
+                io.sockets.emit("newMessageSent", result.rows[0]);
+            });
+        });
+
+
 
     });
 });

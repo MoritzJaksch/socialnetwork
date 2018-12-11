@@ -108,3 +108,32 @@ exports.getUsersByIds = (arrayOfIds) => {
     const query = `SELECT id, first, last, profilepic FROM users WHERE id = ANY($1)`;
     return db.query(query, [arrayOfIds]);
 };
+
+exports.storeMessage = (message, userId) => {
+    return db.query(`INSERT INTO chat (message, sender_id)
+    VALUES ($1, $2)`,
+    [message, userId]);
+};
+
+exports.getMessages = () =>{
+    return db.query(`SELECT * FROM (
+                        SELECT sender_id, message, created_at, first, last, profilepic
+                        FROM chat
+                        JOIN users
+                        ON users.id = sender_id
+                        ORDER BY created_at DESC
+                        LIMIT 10
+                    ) as reverse
+                    ORDER BY reverse.created_at ASC`);
+};
+
+
+
+exports.getNewMessage = () =>{
+    return db.query(`SELECT sender_id, message, created_at, first, last, profilepic
+                    FROM chat
+                    JOIN users
+                    ON users.id = sender_id
+                    ORDER BY created_at DESC
+                    LIMIT 1`);
+};

@@ -62,9 +62,22 @@ export default function(state = {}, action) {
             )
         };
     }
-    console.log(state);
+    if(action.type == "MESSAGE_SENT"){
+        console.log("action.message ind MESSAGE_SENT: ",action.message);
+        return{
+            ...state,
+            messages: state.messages.concat(action.message)
+        };
+    }
+    if(action.type=="ALL_MESSAGES"){
+        console.log("action.message in ALL_MESSAGES: ",action.messages);
+        return{
+            ...state,
+            messages: action.messages
+        };
+    }
+    console.log("state in reducer: ",state);
     return state;
-
 }
 // return {
 //     ...state,

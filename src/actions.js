@@ -73,3 +73,17 @@ export function userLeft(userId){
         id: userId
     };
 }
+
+export function messageWasSent(message){
+    return{
+        type: "MESSAGE_SENT",
+        message: message
+    };
+}
+
+export function gotAllMessages(messages){
+    return{
+        type: "ALL_MESSAGES",
+        messages: messages
+    };
+}

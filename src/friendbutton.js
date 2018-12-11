@@ -1,5 +1,8 @@
 import React from "react";
 import axios from "./axios";
+import {connect} from 'react-redux';
+import {initSocket} from './socket';
+
 
 export default class Friendbutton extends React.Component {
     constructor(props) {
@@ -42,6 +45,8 @@ export default class Friendbutton extends React.Component {
     }
 
     makeFriendRequest() {
+        // let socket = initSocket();
+
         if (this.state.status == 0) {
             axios
                 .post("/friendship/" + this.props.otherUserId + "/send")
@@ -50,14 +55,13 @@ export default class Friendbutton extends React.Component {
                         buttontext: "cancel friendrequest",
                         status: 1
                     });
-                    console.log("result in send", results);
                 });
+            // socket.emit("friendRequestSent", this.props.otherUserId);
         }
         if (this.state.status == 1 || this.state.status == 3) {
             axios
                 .post("/friendship/" + this.props.otherUserId + "/cancel")
                 .then(results => {
-                    console.log("results in friendship cancel: ", results);
                     this.setState({
                         buttontext: "send friendrequest",
                         status: 0
@@ -100,6 +104,7 @@ export default class Friendbutton extends React.Component {
         );
     }
 }
+
 
 {
     /* <FriendButton otherUserId={this.props.match.params.id} />; */

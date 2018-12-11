@@ -1,5 +1,8 @@
 import React from "react";
 import axios from "./axios";
+import {connect} from 'react-redux';
+import {initSocket} from './socket';
+
 
 import { Link } from "react-router-dom";
 import ProfileOpp from "./profileopp";
@@ -31,12 +34,27 @@ export default class OtherPersonProfile extends React.Component {
         // this.props.history.push("/");
     }
 
+    sendMessage(e){
+        let socket = initSocket();
+        if (e.which === 13){
+            var newMSG= {
+                to: this.props.match.params.id,
+                from: this.props.user.username,
+                message: e.taget.value
+            };
+            socket.emit('privateMessage', e.target.value);
+            e.target.value = "";
+        }
+
+    }
+
     render() {
         return (
             <div className="opp-container">
                 <h1>{this.state.first}'s Profile!</h1>
                 <ProfilePic url={this.state.profilepic} />
                 <Friendbutton otherUserId={this.props.match.params.id} />
+                <textarea onKeyDown = {this.sendMessage}/>
             </div>
         );
     }
