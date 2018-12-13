@@ -20,19 +20,16 @@ export default class Uploader extends React.Component {
         console.log("submitted.");
     }
     handleChange(e) {
-        console.log("handle change", e.target.files[0]);
         this.setState(
             {
                 [e.target.name]: e.target.files[0]
-            },
-            () => console.log("this state uploader: ", this.state)
+            }
         );
     }
 
     render() {
         return (
             <div id="uploader">
-                <h1>uploader is here, bitches</h1>
                 <form onSubmit={this.handleSubmit}>
                     <input
                         name="profilePic"
@@ -40,12 +37,12 @@ export default class Uploader extends React.Component {
                         type="file"
                         accept="image/*"
                     />
-                    <button>upload</button>
-                    <h1
-                        onClick={e =>
-                            this.props.hideUploader(this.state.profilepic)
-                        }
-                    >
+                    <button onClick={e =>
+                        this.props.hideUploader(this.state.profilepic)}>
+                        upload
+                    </button>
+                    <h1 onClick={e =>
+                        this.props.closeUploader()}>
                         close
                     </h1>
                 </form>

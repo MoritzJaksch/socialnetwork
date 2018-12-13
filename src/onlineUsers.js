@@ -21,11 +21,11 @@ class OnlineUsers extends React.Component {
                     if (user.profilepic) {
                         url = user.profilepic;
                     } else {
-                        url = "/assets/1a.jpg";
+                        url = "/assets/defaultPic.png";
                     }
 
                     return (
-                        <div key = {user.id}>
+                        <div className = "online-users-container" key = {user.id}>
                             <img  src= {url} alt=""/>
                             {user.first} {user.last}
                         </div>

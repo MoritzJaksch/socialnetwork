@@ -1,7 +1,10 @@
 DROP TABLE IF EXISTS friends;
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS chat;
+DROP TABLE IF EXISTS wallpost;
+DROP TABLE IF EXISTS walllikes;
+DROP TABLE IF EXISTS chatlikes;
 
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -26,4 +29,26 @@ CREATE TABLE chat(
     sender_id INTEGER NOT NULL REFERENCES users(id),
     message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wallpost(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER NOT NULL REFERENCES users(id),
+    receiver_id INTEGER NOT NULL REFERENCES users(id),
+    wallpost TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE walllikes(
+    id SERIAL PRIMARY KEY,
+    liker_id INTEGER NOT NULL REFERENCES users(id),
+    post_id INTEGER NOT NULL REFERENCES wallpost(id),
+    liked BOOLEAN DEFAULT false
+);
+
+CREATE TABLE chatlikes(
+    id SERIAL PRIMARY KEY,
+    liker_id INTEGER NOT NULL REFERENCES users(id),
+    post_id INTEGER NOT NULL REFERENCES chat(id),
+    liked BOOLEAN DEFAULT false
 );

@@ -6,7 +6,7 @@ export default function ProfilePic(props) {
     if (props.url) {
         url = props.url;
     } else {
-        url = "/assets/1a.jpg";
+        url = "/assets/defaultPic.png";
     }
     return (
         <div className="profile-pic-container">

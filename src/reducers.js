@@ -76,9 +76,33 @@ export default function(state = {}, action) {
             messages: action.messages
         };
     }
+    if(action.type=="ALL_POSTS"){
+        return{
+            ...state,
+            posts: action.posts,
+        };
+    }
+    if(action.type=="WALL_POST"){
+        return{
+            ...state,
+            posts: state.posts.concat(action.post)
+        };
+    }
     console.log("state in reducer: ",state);
     return state;
 }
+
+// ...state,
+// onlineUsers: state.onlineUsers.filter(
+//     onlineUser => {
+//         if(onlineUser.id != action.id){
+//             return onlineUser;
+//         }
+//
+//     }
+//
+// )
+
 // return {
 //     ...state,
 //     friends: state.friends.map(

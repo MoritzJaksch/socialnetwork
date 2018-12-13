@@ -64,7 +64,10 @@ const {
     getUsersByIds,
     storeMessage,
     getMessages,
-    getNewMessage
+    getNewMessage,
+    wallpost,
+    getWallposts,
+    getNewWallpost
 } = require("./db");
 
 app.use(express.static("./public"));
@@ -245,7 +248,10 @@ app.post("/login", (req, res) => {
     });
 });
 
-// app.get("/user", (req, res) => {});
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/");
+});
 
 app.get("*", function(req, res) {
     if (!req.session.userId) {
@@ -295,6 +301,11 @@ io.on('connection', socket=>{
         io.sockets.emit("gotAllMessages", result.rows);
     });
 
+    getWallposts(userId).then(result=>{
+        console.log("results in wallpost with USERID: ", result.rows);
+        socket.emit("getWallposts", result.rows);
+    });
+
     socket.on('disconnect', ()=>{
         console.log(`socket with the id ${socket.id} is now disconnected`);
         delete onlineUsers[socketId];
@@ -316,8 +327,21 @@ io.on('connection', socket=>{
                 io.sockets.emit("newMessageSent", result.rows[0]);
             });
         });
-
-
+    });
+    socket.on('wallPost', (post)=>{
+        console.log("msg from socket", post);
+        wallpost(userId, post.id, post.message).then(()=>{
+            getNewWallpost(post.id).then(result => {
+                console.log("result in wallpost: ", result.rows);
+                io.sockets.emit("newWallpost", result.rows[0]);
+            });
+        });
+    });
+    socket.on("wallMounted", (id)=>{
+        getWallposts(id).then(result=>{
+            console.log("results in wallpost with ID: ", result.rows);
+            socket.emit("getWallposts", result.rows);
+        });
 
     });
 });

@@ -137,3 +137,34 @@ exports.getNewMessage = () =>{
                     ORDER BY created_at DESC
                     LIMIT 1`);
 };
+
+exports.wallpost = (sender_id, receiver_id, text) => {
+    return db.query(`INSERT INTO wallpost (sender_id, receiver_id, wallpost)
+    VALUES ($1, $2, $3)`, [sender_id, receiver_id, text]);
+};
+
+exports.getWallposts = (receiver_id) => {
+    return db.query(`SELECT * FROM (SELECT sender_id, wallpost, wallpost.id, created_at, first, last, profilepic
+                    FROM wallpost
+                    JOIN users
+                    ON users.id = sender_id
+                    WHERE receiver_id = $1
+                    ORDER BY created_at DESC) as reverse
+                    ORDER BY reverse.created_at ASC
+                    `, [receiver_id]);
+};
+
+exports.getNewWallpost = (receiver_id) => {
+    return db.query(`SELECT sender_id, wallpost, wallpost.id, created_at, first, last, profilepic
+                    FROM wallpost
+                    JOIN users
+                    ON users.id = sender_id
+                    WHERE receiver_id = $1
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                    `, [receiver_id]);
+};
+
+// exports.getLikes = ()
+//
+// exports.insertWallLikes = ()

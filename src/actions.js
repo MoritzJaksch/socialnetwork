@@ -87,3 +87,17 @@ export function gotAllMessages(messages){
         messages: messages
     };
 }
+
+export function newWallPost(wallpost){
+    return{
+        type: "WALL_POST",
+        post: wallpost
+    };
+}
+
+export function allWallPosts(wallposts){
+    return{
+        type: "ALL_POSTS",
+        posts: wallposts
+    };
+}

@@ -67,7 +67,7 @@ export default class Bio extends React.Component {
         console.log("props in render bio: ", this.props);
         if (!this.state.edit) {
             return (
-                <div>
+                <div id = "bio">
                     <textarea
                         onChange={this.handleChange}
                         name="bio"
@@ -81,7 +81,7 @@ export default class Bio extends React.Component {
             );
         } else {
             return (
-                <div>
+                <div id = "bio">
                     <p>{this.props.bio}</p>
                     <button onClick={this.editBio}>edit</button>
                 </div>

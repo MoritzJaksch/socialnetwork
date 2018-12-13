@@ -1,6 +1,10 @@
 * {
     font-family: sans-serif;
 }
+body{
+    margin: 0;
+    background-color: rgb(242, 242, 242);
+}
 .welcome-container {
     border: 3px solid black;
     background: violet;
@@ -24,15 +28,74 @@ form {
 }
 
 .logo-container img {
+    position: absolute;
+    height: 60px;
+    left: 12px;
+    top: 7px;
+}
+#profile {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 15vh;
+    border-radius: 5px;
+    margin-left: 5vh;
+    height: 50vh;
+    width: 30vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.profile-pic-container img{
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center right;
+}
+
+
+#header {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: relative;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-top: -8px;
     height: 75px;
+    background-color: white;
+    border-bottom: 2px solid rgb(233, 233, 233);
 }
-
-#profile img {
-    height: 200px;
-}
-
 #header .profile-pic {
-    height: 75px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}
+.header-container {
+    position: fixed;
+    top: 8px;
+    left: 0;
+    width: 100vw;
+}
+
+
+
+#bio {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+#bio textarea {
+    width: 80%;
+}
+#bio button {
+    width: 100%;
+    border: 1px solid;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #profile .profile-pic-container {
@@ -41,10 +104,289 @@ form {
 
 #header .profile-pic-container {
     position: absolute;
-    background-color: grey;
-    top: 0;
-    right: 0;
+    top: 7px;
+    right: 12px;
+}
+.opp-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 15vh;
+    border-radius: 5px;
+    margin-left: 5vh;
+    height: 81.5vh;
+    width: 30vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
 }
 .opp-container .profile-pic-container img {
-    height: 100px;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+
+
+#uploader {
+    height: 10%;
+    width: 100%;
+    position:fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    color: white
+}
+
+#uploader form {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+
+}
+
+
+/* WALL COMPONENT */
+.other-person-wall {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    left: 35%;
+    top: 15vh;
+    height: 81.5vh;
+    background-color: white;
+    border-radius: 5px;
+}
+
+
+.wall {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    left: 35%;
+    top: 15vh;
+    height: 81.5vh;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.wall-poster{
+    font-size: 12px;
+    align-self: flex-start;
+}
+.wall-post {
+    align-self: flex-end;
+}
+.text-on-wall{
+    margin-left: 2%;
+    width: 80%;
+}
+#user-wall {
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(213, 213, 213);
+    margin: 1%;
+
+    border-radius: 5px;
+}
+.profile-pic-on-wall{
+    margin: 1%;
+}
+
+
+#user-wall .profile-pic {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    align-self: flex-start;
+}
+.wall-textarea {
+    width: 97%;
+    height: 60px;
+    border-radius: 5px;
+    margin-top: 1.5%;
+    margin-left: 1%;
+    background-color: rgb(242, 242, 242);
+    border: 2px solid rgb(201, 201, 201);
+}
+
+
+
+.wall-container{
+    height: 60vh;
+    width: 30vw;
+    overflow: scroll;
+}
+
+.other-person-wall .wall-container{
+    height: 60vh;
+    width: 60vw;
+    overflow: scroll;
+}
+
+
+/* friends and wannabes!!! */
+
+.friends-and-wannabe-container {
+    /* position: absolute; */
+    margin-left: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2vh;
+    width: 30vw;
+    height: 29.5vh;
+}
+
+.friends-container {
+    position: relative;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 14vw;
+    height: 29.5vh;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.friends-container img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.wannabe-container {
+    position: relative;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 14vw;
+    height: 29.5vh;
+    margin-left: 2vw;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.wannabe-container img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.wannabe-cards {
+    margin-top: 34px;
+    overflow: hidden;
+}
+.wannabe-cards div {
+    height: 160px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 8px;
+    margin-bottom:  8px;
+    border: 1px solid rgb(222, 222, 222);
+}
+.friend-cards {
+    margin-top: 34px;
+    overflow: scroll;
+}
+.friend-cards div {
+    height: 160px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 8px;
+    margin-bottom:  8px;
+    border: 1px solid rgb(222, 222, 222);
+}
+
+h4 {
+    top: 0;
+    position: absolute;
+    margin-bottom: 4px;
+    margin-top: 15px;
+}
+
+h1 {
+    margin-left: 1%;
+}
+
+/* CHAT COMPONENT */
+
+
+
+.chat-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    right: 3%;
+    top: 15vh;
+    height: 81.5vh;
+    width: 30vw;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.wall-poster{
+    font-size: 12px;
+    align-self: flex-start;
+}
+.wall-post {
+    align-self: flex-end;
+}
+.text-on-wall{
+    margin-left: 2%;
+    width: 80%;
+}
+#user-chat {
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(213, 213, 213);
+    margin: 1%;
+
+    border-radius: 5px;
+}
+.profile-pic-on-wall{
+    margin: 1%;
+}
+
+
+#user-chat .profile-pic {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    align-self: flex-start;
+}
+.wall-textarea {
+    width: 96%;
+    height: 60px;
+    border-radius: 5px;
+    margin-top: 1.5%;
+    margin-left: 1%;
+    background-color: rgb(242, 242, 242);
+    border: 2px solid rgb(201, 201, 201);
+}
+
+.logout img {
+    height: 55px;
+    position: absolute;
+    top: 8px;
+    right: 90px;
+}
+
+.chat-message-container{
+    height: 60vh;
+    width: 30vw;
+    overflow: scroll;
 }

@@ -1,22 +1,21 @@
 import React from "react";
 import axios from "./axios";
-import {connect} from 'react-redux';
-import {initSocket} from './socket';
 
 
 import { Link } from "react-router-dom";
 import ProfileOpp from "./profileopp";
 import ProfilePic from "./profilepic";
 import Friendbutton from "./friendbutton";
+import Wall from "./wall";
+import Bio from "./bio";
 
 export default class OtherPersonProfile extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {};
     }
 
     componentDidMount() {
-        console.log("OPP did mount");
 
         axios
             .get("/user/" + this.props.match.params.id + "/info")
@@ -34,27 +33,31 @@ export default class OtherPersonProfile extends React.Component {
         // this.props.history.push("/");
     }
 
-    sendMessage(e){
-        let socket = initSocket();
-        if (e.which === 13){
-            var newMSG= {
-                to: this.props.match.params.id,
-                from: this.props.user.username,
-                message: e.taget.value
-            };
-            socket.emit('privateMessage', e.target.value);
-            e.target.value = "";
-        }
-
-    }
+    // sendMessage(e){
+    //     let socket = initSocket();
+    //     if (e.which === 13){
+    //         var newMsg= {
+    //             to: this.props.match.params.id,
+    //             from: this.props.first,
+    //             message: e.taget.value
+    //         };
+    //         socket.emit('privateMessage', newMsg);
+    //         e.target.value = "";
+    //         e.preventDefault();
+    //     }
+    //
+    // }
 
     render() {
         return (
             <div className="opp-container">
-                <h1>{this.state.first}'s Profile!</h1>
+                <h1>{this.state.first} Profile!</h1>
                 <ProfilePic url={this.state.profilepic} />
+                <p>{this.state.bio} </p>
                 <Friendbutton otherUserId={this.props.match.params.id} />
-                <textarea onKeyDown = {this.sendMessage}/>
+                <div className = "other-person-wall">
+                    <Wall otherUserId={this.props.match.params.id} />
+                </div>
             </div>
         );
     }

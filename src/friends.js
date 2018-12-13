@@ -1,5 +1,7 @@
 import React from "react";
 import {connect} from 'react-redux';
+import { Link } from "react-router-dom";
+
 import {receiveFriendsAndWannabes, unfriend, acceptFriendRequest } from './actions';
 
 class Friends extends React.Component {
@@ -15,44 +17,55 @@ class Friends extends React.Component {
         }
         return(
 
-            <div>
-                <h1>FRIENDS</h1>
-                {this.props.friends.map(friend => {
-                    var url;
-                    if (friend.profilepic) {
-                        url = friend.profilepic;
-                    } else {
-                        url = "/assets/1a.jpg";
-                    }
+            <div className = "friends-and-wannabe-container">
+                <div className = "friends-container">
+                    <h4>friends</h4>
+                    <div className = "friend-cards">
+                        {this.props.friends.map(friend => {
+                            var url;
+                            if (friend.profilepic) {
+                                url = friend.profilepic;
+                            } else {
+                                url = "/assets/defaultPic.png";
+                            }
 
-                    return (
-                        <div key = {friend.id}>
-                            <img  src= {url} alt=""/>
-                            <button onClick = {e=>this.props.dispatch(unfriend(friend.id))}>unfriend</button>
-                            {friend.first} {friend.last}
-                        </div>
-                    );
-                })
-                }
-                <h1>WANNABES</h1>
-                {this.props.wannabes.map(friend => {
-                    var url;
-                    if (friend.profilepic) {
-                        url = friend.profilepic;
-                    } else {
-                        url = "/assets/1a.jpg";
-                    }
+                            return (
+                                <div key = {friend.id}>
+                                    <Link to={`/user/${friend.id}`}>
+                                        <img  src={url} alt=""/>
+                                    </Link>
+                                    <p>{friend.first} {friend.last}</p>
+                                    <button onClick = {e=>this.props.dispatch(unfriend(friend.id))}>unfriend</button>
+                                </div>
+                            );
+                        })
+                        }
+                    </div>
+                </div>
+                <div className = "wannabe-container">
+                    <h4>requested</h4>
+                    <div className = "wannabe-cards">
+                        {this.props.wannabes.map(friend => {
+                            var url;
+                            if (friend.profilepic) {
+                                url = friend.profilepic;
+                            } else {
+                                url = "/assets/defaultPic.png";
+                            }
 
-                    return (
-                        <div key = {friend.id}>
-                            <img  src={url} alt=""/>
-                            <button onClick = {e=>this.props.dispatch(acceptFriendRequest(friend.id))}>accept friendrequest</button>
-
-                            {friend.first} {friend.last}
-                        </div>
-                    );
-                })
-                }
+                            return (
+                                <div key = {friend.id}>
+                                    <Link to={`/user/${friend.id}`}>
+                                        <img  src={url} alt=""/>
+                                    </Link>
+                                    <p>{friend.first} {friend.last}</p>
+                                    <button onClick = {e=>this.props.dispatch(acceptFriendRequest(friend.id))}>accept friendrequest</button>
+                                </div>
+                            );
+                        })
+                        }
+                    </div>
+                </div>
             </div>
         );
     }
