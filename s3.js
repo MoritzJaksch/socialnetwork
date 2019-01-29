@@ -28,7 +28,6 @@ exports.upload = (req, res, next) => {
     readStream.pipe(s3Request);
 
     s3Request.on("response", s3Response => {
-        console.log("status code of response: ", s3Response.statusCode);
         const wasSuccessful = s3Response.statusCode == 200;
 
         if (wasSuccessful) {

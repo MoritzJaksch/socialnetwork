@@ -79,13 +79,19 @@ export default function(state = {}, action) {
     if(action.type=="ALL_POSTS"){
         return{
             ...state,
-            posts: action.posts,
+            posts: action.posts
         };
     }
     if(action.type=="WALL_POST"){
         return{
             ...state,
             posts: state.posts.concat(action.post)
+        };
+    }
+    if(action.type=="REQUEST_SENT"){
+        return{
+            ...state,
+            user: action.user
         };
     }
     console.log("state in reducer: ",state);

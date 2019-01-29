@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "./axios";
+import { Link } from "react-router-dom";
+
 
 export default class Login extends React.Component {
     constructor() {
@@ -11,7 +13,6 @@ export default class Login extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(e) {
-        console.log("login handlechange working");
         this.setState(
             {
                 [e.target.name]: e.target.value
@@ -22,18 +23,14 @@ export default class Login extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("default prevented", this.state);
         axios
             .post("/login", this.state)
             .then(res => {
-                console.log("res in post", res);
                 if (res.data.success == false) {
                     this.setState({
                         error: "something went wrong, please try again!"
                     });
                 } else {
-                    console.log("res in post SUCCESS: ", res);
-
                     location.replace("/");
                 }
             })
@@ -44,9 +41,9 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>hash routing!!!!!!!!!11</h1>
-                <form onSubmit={this.handleSubmit}>
+            <div className="registration-container">
+                <h1>login</h1>
+                <form className = "registration-form" onSubmit={this.handleSubmit}>
                     <input
                         onChange={this.handleChange}
                         name="email"
@@ -59,8 +56,10 @@ export default class Login extends React.Component {
                         type="password"
                         placeholder="password"
                     />
-                    <button>register</button>
+                    <button>login</button>
                 </form>
+                <Link className =  "link-to-login" to="/">not yet signed up? click here</Link>
+
             </div>
         );
     }

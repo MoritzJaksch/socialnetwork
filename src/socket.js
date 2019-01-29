@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client';
-import {onlineUsers, userJoined, userLeft, messageWasSent, gotAllMessages, newWallPost, allWallPosts } from './actions';
+import {onlineUsers, userJoined, userLeft, messageWasSent, gotAllMessages, newWallPost, allWallPosts, friendRequest } from './actions';
 
 
 let socket;
@@ -29,6 +29,9 @@ export function initSocket(store){
         });
         socket.on('getWallposts', (wallposts)=> {
             store.dispatch(allWallPosts(wallposts));
+        });
+        socket.on("friendRequest", (sendingUser) => {
+            store.dispatch(friendRequest(sendingUser));
         });
 
     }

@@ -11,7 +11,6 @@ export default class Registration extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(e) {
-        console.log("working");
         this.setState(
             {
                 [e.target.name]: e.target.value
@@ -21,17 +20,14 @@ export default class Registration extends React.Component {
     }
     handleSubmit(e) {
         e.preventDefault();
-        console.log("default prevented", this.state);
         axios
             .post("/registration", this.state)
             .then(res => {
-                console.log("res in post", res);
                 if (res.data.success == false) {
                     this.setState({
                         error: "something went wrong, please try again!"
                     });
                 } else {
-                    console.log("res in post SUCCESS: ", res);
 
                     location.replace("/");
                 }
@@ -43,9 +39,8 @@ export default class Registration extends React.Component {
     render() {
         return (
             <div className="registration-container">
-                <Link to="/login">click here to log in</Link>
-                <h1>Register for this site please</h1>
-                <form onSubmit={this.handleSubmit}>
+                <h1>sign up</h1>
+                <form className = "registration-form" onSubmit={this.handleSubmit}>
                     <input
                         onChange={this.handleChange}
                         name="first"
@@ -72,6 +67,8 @@ export default class Registration extends React.Component {
                     />
                     <button>register</button>
                 </form>
+                <Link className =  "link-to-login" to="/login">already signed up? click here</Link>
+
                 <p>{this.state.error}</p>
             </div>
         );

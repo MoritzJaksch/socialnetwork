@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from 'react-redux';
 import { Link } from "react-router-dom";
+import Friendbutton from "./friendbutton";
 
 import {receiveFriendsAndWannabes, unfriend, acceptFriendRequest } from './actions';
 
@@ -45,6 +46,9 @@ class Friends extends React.Component {
                 <div className = "wannabe-container">
                     <h4>requested</h4>
                     <div className = "wannabe-cards">
+                        {/* {this.props.user && <div className = "request">
+                            <button onClick = {e=>this.props.dispatch(acceptFriendRequest(this.props.user.id))}>accept friendrequest</button>
+                        </div>} */}
                         {this.props.wannabes.map(friend => {
                             var url;
                             if (friend.profilepic) {
@@ -80,7 +84,8 @@ const mapStateToProps = state => {
         ),
         wannabes: list && list.filter(
             user=>!user.accepted
-        )
+        ),
+        user: state.user
     };
 };
 

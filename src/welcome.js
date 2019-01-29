@@ -6,7 +6,6 @@ import { HashRouter, Route } from "react-router-dom";
 export default function Welcome() {
     return (
         <div className="welcome-container">
-            <h1>Welcome!</h1>
             <HashRouter>
                 <div>
                     <Route exact path="/" component={Registration} />

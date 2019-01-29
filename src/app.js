@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "./axios";
 import { BrowserRouter, Route } from "react-router-dom";
+import {connect} from 'react-redux';
+import {initSocket} from './socket';
+
 
 import Logo from "./logo";
 import ProfilePic from "./profilepic";
@@ -15,7 +18,7 @@ import { Link } from "react-router-dom";
 
 
 
-export default class App extends React.Component {
+class App extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -49,10 +52,11 @@ export default class App extends React.Component {
     }
     componentDidMount() {
         axios.get("/user").then(({ data }) => {
-            console.log("res in user: ", data);
             this.setState(data.rows[0]);
         });
     }
+
+
     render() {
         return (
             <div className = "container">
@@ -66,13 +70,25 @@ export default class App extends React.Component {
                                 <img src = "/assets/logout.png" />
                             </div>
                         </a>
+                        {this.props.user && this.props.user.map(u=>{
+                            return(
+                                <a key = {u.id} href = {`/user/${u.id}`}>
+                                    <div className = "friendrequest">
+                                        <img src = "/assets/friendrequest.png" />
+                                    </div>
+                                </a>
+
+                            );
+                        })}
+
                         <div className = "profile-pic-header">
-                            <ProfilePic
+                            <a href="/"><ProfilePic
                                 url={this.state.profilepic}
                                 name={this.state.first}
                                 showUploader={this.showUploader}
                                 closeUploader={this.closeUploader}
-                            />
+
+                            /></a>
                         </div>
                     </div>
                 </div>
@@ -128,3 +144,12 @@ export default class App extends React.Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+
+        user: state.user
+
+    };
+};
+
+export default connect(mapStateToProps)(App);

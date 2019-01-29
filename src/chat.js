@@ -2,6 +2,8 @@ import React from "react";
 import {connect} from 'react-redux';
 import {initSocket} from './socket';
 import ProfilePic from "./profilepic";
+import { Link } from "react-router-dom";
+
 class Chat extends React.Component {
     constructor(props){
         super(props);
@@ -16,22 +18,22 @@ class Chat extends React.Component {
             e.target.value = "";
         }
     }
-    // componentDidUpdate(){
-    //     console.log("this elem: ", this.elem);
-    //     this.elem.scrollTop = this.elem.scrollHeight;
-    // }
+    componentDidUpdate(){
+        this.elem.scrollTop = this.elem.scrollHeight;
+    }
+
     render(){
         return(
 
             <div>
                 <h1>chatroom</h1>
 
-                <div className = "chat-message-container">
+                <div className = "chat-message-container" ref={elem => (this.elem = elem)}>
                     {this.props.messages && this.props.messages.map((message, idx) => {
                         return(
                             <div id = "user-chat" key = {idx}>
                                 <div className = "profile-pic-on-wall">
-                                    <ProfilePic url = {message.profilepic}/>
+                                    <Link to={`/user/${message.sender_id}`}><ProfilePic url = {message.profilepic}/></Link>
                                 </div>
                                 <div className = "text-on-wall">
                                     <p className = "wall-poster">

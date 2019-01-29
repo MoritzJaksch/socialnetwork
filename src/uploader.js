@@ -14,10 +14,8 @@ export default class Uploader extends React.Component {
         formData.append("file", this.state.profilePic);
 
         axios.post("/upload", formData).then(res => {
-            console.log("res in upload:", res.data.rows[0]);
             this.setState({ profilepic: res.data.rows[0].profilepic });
         });
-        console.log("submitted.");
     }
     handleChange(e) {
         this.setState(
@@ -27,18 +25,21 @@ export default class Uploader extends React.Component {
         );
     }
 
+
     render() {
         return (
             <div id="uploader">
-                <form onSubmit={this.handleSubmit}>
+                <form >
                     <input
                         name="profilePic"
                         onChange={this.handleChange}
                         type="file"
                         accept="image/*"
                     />
-                    <button onClick={e =>
-                        this.props.hideUploader(this.state.profilepic)}>
+                    <button onClick={e => {
+                        this.handleSubmit(e);
+                    }
+                    }>
                         upload
                     </button>
                     <h1 onClick={e =>
