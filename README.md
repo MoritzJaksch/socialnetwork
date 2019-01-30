@@ -4,7 +4,7 @@ This project was created using react. It is a minimalistic approach to a simple 
 
 ## Built With
 
-- [react](https://reactjs.org/docs/react-api.html) - the front-end framework used
+- [react](https://reactjs.org/docs/react-api.html) - the library used for this project
 - [redux](https://redux.js.org/api/api-reference) - for react state management
 - [socket.io](https://socket.io/docs/) - to enable real-time events in the app
 - [express.js](http://expressjs.com/de/api.html) - the node.js framework used
